@@ -151,7 +151,7 @@
 </head>
 
 <body>
-  <audio id="bgMusic" autoplay loop hidden>
+  <audio id="bgMusic" loop hidden>
     <source src="cwety.mp3" type="audio/mpeg">
   </audio>
 
@@ -189,6 +189,9 @@
   <div class="hearts" id="heartsContainer"></div>
 
   <script>
+    document.getElementById("bgMusic").play().catch(e => {
+      console.log("Музыка не может быть воспроизведена автоматически:", e);
+    });
     document.getElementById("bgMusic").volume = 0.08;
     function playClickSound() {
       const clickSound = document.getElementById("clickSound");
@@ -197,32 +200,39 @@
     }
 
     function startHearts() {
-      playClickSound();
+  playClickSound();
 
-      const emojis = ["💖", "🌸", "💫", "✨", "💕", "🌷", "💐", "💝", "🩷", "🌟"];
+  const music = document.getElementById("bgMusic");
+  music.volume = 0.08;
+  music.play().catch(e => {
+    console.log("Музыка не может быть воспроизведена автоматически:", e);
+  });
 
-      for (let i = 0; i < 30; i++) {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
+  const emojis = ["💖", "🌸", "💫", "✨", "💕", "🌷", "💐", "💝", "🩷", "🌟"];
 
-        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-        const size = Math.random() * 1.5 + 1;
-        const rotateDirection = Math.random() > 0.5 ? 1 : -1;
+  for (let i = 0; i < 30; i++) {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
 
-        heart.innerText = randomEmoji;
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = size + "em";
-        heart.style.opacity = "0";
-        heart.style.transform = `rotate(${Math.random() * 360}deg)`;
-        heart.style.animationDuration = 2 + Math.random() * 2 + "s";
-        heart.style.setProperty("--rotate-dir", rotateDirection);
+    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+    const size = Math.random() * 1.5 + 1;
+    const rotateDirection = Math.random() > 0.5 ? 1 : -1;
 
-        document.getElementById("heartsContainer").appendChild(heart);
+    heart.innerText = randomEmoji;
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = size + "em";
+    heart.style.opacity = "0";
+    heart.style.transform = `rotate(${Math.random() * 360}deg)`;
+    heart.style.animationDuration = 2 + Math.random() * 2 + "s";
+    heart.style.setProperty("--rotate-dir", rotateDirection);
 
-        setTimeout(() => heart.style.opacity = "1", 70);
-        setTimeout(() => heart.remove(), 10000);
-      }
-    }
+    document.getElementById("heartsContainer").appendChild(heart);
+
+    setTimeout(() => heart.style.opacity = "1", 70);
+    setTimeout(() => heart.remove(), 10000);
+  }
+}
+
 
     const surprises = [
       "Ты делаешь этот мир лучше, потому-что ты есть в нём 🌟",
