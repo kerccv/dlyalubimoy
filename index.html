@@ -9,7 +9,6 @@
     @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Neucha&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap');
 
     body {
       margin: 0;
@@ -56,6 +55,8 @@
     .center, .section {
       position: relative;
       z-index: 1;
+      padding: 2rem;
+      text-align: center;
     }
 
     .center {
@@ -64,26 +65,21 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      text-align: center;
-      padding: 2rem;
     }
 
-    h1 {
-      font-size: 2.7rem;
+    h1, h2 {
       color: #d63384;
       font-family: "Neucha", cursive;
     }
 
-    h2 {
-      font-size: 2.3rem;
-      color: #d63384;
-      font-family: "Neucha", cursive;
-    }
+    h1 { font-size: 2.7rem; }
+    h2 { font-size: 2.3rem; }
 
     p {
       font-size: 1.5rem;
       color: #333;
       max-width: 600px;
+      margin: 1rem auto;
       font-family: "Neucha", cursive;
     }
 
@@ -106,32 +102,62 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    .section {
-      padding: 4rem 1rem;
-    }
-
     .letter {
       background: rgba(255, 255, 255, 0.459);
       border-radius: 26px;
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.048);
       backdrop-filter: blur(6.9px);
-      -webkit-backdrop-filter: blur(7.9px);
-      border: 1px solid rgba(255, 255, 255, 0);
       padding: 2rem;
       max-width: 700px;
       margin: 0 auto;
     }
+
+    .with-sticker {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sticker-image {
+      position: absolute;
+      width: 120px;
+      opacity: 0;
+      transform: translateY(40px) scale(1.05);
+      transition: opacity 1s ease, transform 1s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .with-sticker.visible .sticker-image {
+      opacity: 1;
+      transform: translateY(0px) scale(1.05);
+    }
+
+    .with-sticker[data-sticker="spotty1.png"] .sticker-image {
+      top: 550px;
+      right: 10px;
+    }
+
+    .with-sticker[data-sticker="spotty2.png"] .sticker-image {
+      bottom: -50px;
+      left: 20px;
+    }
+
+    .with-sticker[data-sticker="spotty3.png"] .sticker-image {
+      top: 700px;
+      left: 70%;
+      transform: translateX(-50%) translateY(40px);
+    }
   </style>
 </head>
-<body>
 
+<body>
   <audio id="bgMusic" autoplay loop hidden>
     <source src="cwety.mp3" type="audio/mpeg">
   </audio>
 
   <audio id="clickSound" src="notification.mp3" preload="auto"></audio>
 
-  <div class="center">
+  <div class="center with-sticker" data-sticker="spotty1.png">
     <div class="letter">
       <h1>Ты знаешь как я тебя люблю, моё солнышко?</h1>
       <p>Надеюсь тебе понравился подарочек, я старался! Нажми на кнопочку ниже своими пальчиками!</p>
@@ -140,17 +166,19 @@
     <p>А потом листай ниже</p>
   </div>
 
-  <div class="section">
+  <div class="section with-sticker" data-sticker="spotty2.png">
     <div class="letter">
       <h2>Письмо для тебя</h2>
       <p>
-        Дашенька, ты у меня самая хорошая, самая милая, самая добрая, самая красивенькая. Я очень тебя ценю, мне нравится проводить с тобой время, обнимать тебя и целовать. Все наши моменты вместе я помню так, как будто это было вчера. Я тебя люблю моё солнце 💕💕
+        Дашенька, ты у меня самая хорошая, самая милая, самая добрая, самая красивенькая. Я очень тебя ценю,
+        мне нравится проводить с тобой время, обнимать тебя и целовать. Все наши моменты вместе я помню
+        так, как будто это было вчера. Я тебя люблю моё солнце 💕💕
       </p>
       <p>Листай ещё 😉</p>
     </div>
   </div>
 
-  <div class="center">
+  <div class="center with-sticker" data-sticker="spotty3.png">
     <div class="letter">
       <h2>Нажми для сюрприза ✨</h2>
       <button onclick="randomSurprise()">Кто ты для меня??</button>
@@ -162,6 +190,7 @@
 
   <script>
     document.getElementById("bgMusic").volume = 0.1;
+
     function playClickSound() {
       const clickSound = document.getElementById("clickSound");
       clickSound.currentTime = 0;
@@ -213,6 +242,34 @@
       document.getElementById("surpriseText").innerText = random;
       startHearts();
     }
+
+    document.querySelectorAll('.with-sticker').forEach(section => {
+      const img = document.createElement('img');
+      img.src = section.dataset.sticker;
+      img.classList.add('sticker-image');
+      section.appendChild(img);
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, {
+      threshold: 0.3
+    });
+
+    document.querySelectorAll('.with-sticker').forEach(el => observer.observe(el));
+
+    window.addEventListener('scroll', () => {
+      document.querySelectorAll('.sticker-image').forEach((img, index) => {
+        const offset = window.scrollY * 0.1;
+        img.style.transform = `translateY(${40 - offset}px) scale(1.05)`;
+      });
+    });
   </script>
 </body>
 </html>
