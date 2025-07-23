@@ -4,11 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>люблю тебя.</title>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Neucha&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap');
+
     body {
       margin: 0;
       padding: 0;
@@ -17,7 +19,7 @@
       overflow-x: hidden;
       position: relative;
     }
-  
+
     .hearts {
       position: fixed;
       top: 0;
@@ -28,7 +30,7 @@
       pointer-events: none;
       overflow: hidden;
     }
-  
+
     .heart {
       position: absolute;
       animation: fall 6s linear forwards;
@@ -50,12 +52,12 @@
         opacity: 0;
       }
     }
-  
+
     .center, .section {
       position: relative;
       z-index: 1;
     }
-  
+
     .center {
       display: flex;
       flex-direction: column;
@@ -65,13 +67,13 @@
       text-align: center;
       padding: 2rem;
     }
-  
+
     h1 {
       font-size: 2.7rem;
       color: #d63384;
       font-family: "Neucha", cursive;
     }
-    
+
     h2 {
       font-size: 2.3rem;
       color: #d63384;
@@ -84,7 +86,7 @@
       max-width: 600px;
       font-family: "Neucha", cursive;
     }
-  
+
     button {
       background-color: #ff66a3;
       color: white;
@@ -97,15 +99,17 @@
       transition: all 0.2s;
       font-family: "Sofia Sans", sans-serif;
     }
-  
+
     button:hover {
       background-color: #9e1f82;
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
-  
+
     .section {
       padding: 4rem 1rem;
     }
-  
+
     .letter {
       background: rgba(255, 255, 255, 0.459);
       border-radius: 26px;
@@ -118,14 +122,21 @@
       margin: 0 auto;
     }
   </style>
-  
 </head>
 <body>
-  <div class="center">
-    <div class="letter"><h1>Ты знаешь как я тебя люблю, моё солнышко?</h1>
-    <p>Надеюсь тебе понравился подарочек, я старался! Нажми на кнопочку ниже своими пальчиками!</p>
 
-    <button onclick="startHearts()">Люблю тебя 💖</button></div>
+  <audio id="bgMusic" autoplay loop hidden>
+    <source src="cwety.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="clickSound" src="notification.mp3" preload="auto"></audio>
+
+  <div class="center">
+    <div class="letter">
+      <h1>Ты знаешь как я тебя люблю, моё солнышко?</h1>
+      <p>Надеюсь тебе понравился подарочек, я старался! Нажми на кнопочку ниже своими пальчиками!</p>
+      <button onclick="startHearts()">Люблю тебя 💖</button>
+    </div>
     <p>А потом листай ниже</p>
   </div>
 
@@ -140,42 +151,50 @@
   </div>
 
   <div class="center">
-    <h2>Нажми для сюрприза ✨</h2>
-    <button onclick="randomSurprise()">Кто ты для меня??</button>
-    <p id="surpriseText" style="margin-top: 1rem; font-size: 1.2rem;"></p>
+    <div class="letter">
+      <h2>Нажми для сюрприза ✨</h2>
+      <button onclick="randomSurprise()">Кто ты для меня??</button>
+      <p id="surpriseText" style="margin-top: 1rem; font-size: 1.2rem;"></p>
+    </div>
   </div>
 
   <div class="hearts" id="heartsContainer"></div>
 
   <script>
-   function startHearts() {
-  const emojis = ["💖", "🌸", "💫", "✨", "💕", "🌷", "💐", "💝", "🩷", "🌟"];
+    document.getElementById("bgMusic").volume = 0.1;
+    function playClickSound() {
+      const clickSound = document.getElementById("clickSound");
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
 
-  for (let i = 0; i < 30; i++) {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
+    function startHearts() {
+      playClickSound();
 
-    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-    const size = Math.random() * 1.5 + 1;
-    const rotateDirection = Math.random() > 0.5 ? 1 : -1;
+      const emojis = ["💖", "🌸", "💫", "✨", "💕", "🌷", "💐", "💝", "🩷", "🌟"];
 
-    heart.innerText = randomEmoji;
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = size + "em";
-    heart.style.opacity = "0";
-    heart.style.transform = `rotate(${Math.random() * 360}deg)`;
-    heart.style.animationDuration = 1 + Math.random() * 2 + "s";
-    heart.style.setProperty("--rotate-dir", rotateDirection);
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
 
-    document.getElementById("heartsContainer").appendChild(heart);
+        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+        const size = Math.random() * 1.5 + 1;
+        const rotateDirection = Math.random() > 0.5 ? 1 : -1;
 
-    setTimeout(() => heart.style.opacity = "1", 70);
+        heart.innerText = randomEmoji;
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = size + "em";
+        heart.style.opacity = "0";
+        heart.style.transform = `rotate(${Math.random() * 360}deg)`;
+        heart.style.animationDuration = 2 + Math.random() * 2 + "s";
+        heart.style.setProperty("--rotate-dir", rotateDirection);
 
-    setTimeout(() => heart.remove(), 10000);
-  }
-}
+        document.getElementById("heartsContainer").appendChild(heart);
 
-
+        setTimeout(() => heart.style.opacity = "1", 70);
+        setTimeout(() => heart.remove(), 10000);
+      }
+    }
 
     const surprises = [
       "Ты делаешь этот мир лучше, потому-что ты есть в нём 🌟",
@@ -189,6 +208,7 @@
     ];
 
     function randomSurprise() {
+      playClickSound();
       const random = surprises[Math.floor(Math.random() * surprises.length)];
       document.getElementById("surpriseText").innerText = random;
       startHearts();
